@@ -2,7 +2,7 @@
 
 namespace RW.Position.Models
 {
-    public class PositionInfo
+    public struct PositionInfo
     {
         [Column(IsIdentity = true, IsPrimary = true)]
         public int Id { get; set; }

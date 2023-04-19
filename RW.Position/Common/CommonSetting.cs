@@ -8,8 +8,8 @@
             Port = port;
             UserName = userName;
             Password = password;
-            Salt = salt;
-            X64 = x64;
+            Salt = "abcdefghijklmnopqrstuvwxyz20191107salt";
+            X64 = false;
         }
 
         public string IP { get;private set; }

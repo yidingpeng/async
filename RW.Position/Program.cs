@@ -8,6 +8,7 @@ namespace RW.Position
         static void Main(string[] args)
         {
             ConfigurationService.Injection();
+            new OnDemandSubscription();
             Console.WriteLine("Hello");
             Console.ReadKey();
         }

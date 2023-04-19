@@ -36,8 +36,9 @@
     <Reference Include="FreeSql, Version=3.2.693.0, Culture=neutral, PublicKeyToken=a33928e5d4a4b39c, processorArchitecture=MSIL">
       <HintPath>..\packages\FreeSql.3.2.693\lib\net451\FreeSql.dll</HintPath>
     </Reference>
-    <Reference Include="LsWebsocketClient">
-      <HintPath>C:\Users\Administrator\Desktop\LsWebsocketClient.dll</HintPath>
+    <Reference Include="LsWebsocketClient, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\LsWebsocketClient.dll</HintPath>
     </Reference>
     <Reference Include="Mapster, Version=7.3.0.0, Culture=neutral, PublicKeyToken=2f39883af23c29a8, processorArchitecture=MSIL">
       <HintPath>..\packages\Mapster.7.3.0\lib\netstandard2.0\Mapster.dll</HintPath>
@@ -170,10 +171,25 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
+    <Reference Include="websocket-sharp">
+      <HintPath>..\..\..\..\UWB\二次开发基础API接口\二次开发基础API接口\WebSocket接口\Websocket的C#接口开发手册和示例代码2.2.0\C#\packages\WebSocketSharp.1.0.3-rc11\lib\websocket-sharp.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Common\CommonSetting.cs" />
     <Compile Include="Extensions\ConfigurationService.cs" />
+    <Compile Include="Models\LsAreaInfo.cs" />
+    <Compile Include="Models\LsBaseStatus.cs" />
+    <Compile Include="Models\LsBatteryCapInfo.cs" />
+    <Compile Include="Models\LsDataUpdate.cs" />
+    <Compile Include="Models\LsExtendAlarmInfo.cs" />
+    <Compile Include="Models\LsHeartRate.cs" />
+    <Compile Include="Models\LsIOState.cs" />
+    <Compile Include="Models\LsPersonSI.cs" />
+    <Compile Include="Models\LsRegInOutInfo.cs" />
+    <Compile Include="Models\LsTagVideoTrace.cs" />
+    <Compile Include="Models\MapTagsInfo.cs" />
+    <Compile Include="Models\RegTagInfo.cs" />
     <Compile Include="OnDemandSubscription.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

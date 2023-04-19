@@ -18,10 +18,12 @@ namespace RW.Position
         private readonly IFreeSql _freeSql;
 
         public OnDemandSubscription() {
-            var setting = new CommonSetting("", 1000, "", "");
-            _client = new LocalsenseInterface(setting.IP, setting.Port, setting.UserName, setting.Password, setting.Salt);
+            var setting = new CommonSetting("192.168.1.11", 48300, "admin", "Aa123456");
+            _client = new LocalsenseInterface(setting.IP, setting.Port, setting.UserName, setting.Password, setting.Salt,setting.X64);
             _client.OnMessagePos += (sender, e) =>
-                OnHandlerPos(e.Data);
+               // OnHandlerPos(e.Data);
+                Console.WriteLine(e.Data+"111111");
+            
         }
 
         public OnDemandSubscription(IMapper mapper, IFreeSql freeSql):base()
@@ -39,6 +41,7 @@ namespace RW.Position
         {
             var addModel = _mapper.Map<List<PositionInfo>>(data);
             _freeSql.Insert(addModel).ExecuteAffrows();
+
         }
     }
 }
