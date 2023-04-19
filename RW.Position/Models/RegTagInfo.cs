@@ -16,5 +16,9 @@ namespace RW.Position.Models
         public ulong outtime { get; set; }
         public uint timelong { get; set; }
         public int resver { get; set; }
+        public override string ToString()
+        {
+            return String.Format("{0}: {1}:{2}:{3}:{4}:{5}:{6}:{7}", tagid, tagname, grpname,state,intime,outtime,timelong,resver);
+        }
     }
 }

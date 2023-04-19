@@ -14,5 +14,9 @@ namespace RW.Position.Models
         public ushort frameAll { get; set; }
         public ushort frameID { get; set; }
         public List<LsAreaInfo> areas { get; set; }
+        public override string ToString()
+        {
+            return String.Format("{0}: {1}:{2}", frameAll, frameID, areas);
+        }
     }
 }

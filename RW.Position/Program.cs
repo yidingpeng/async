@@ -1,4 +1,5 @@
 ﻿using System;
+using Microsoft.Extensions.DependencyInjection;
 using RW.Position.Extensions;
 
 namespace RW.Position
@@ -7,8 +8,8 @@ namespace RW.Position
     {
         static void Main(string[] args)
         {
-            ConfigurationService.Injection();
-            new OnDemandSubscription();
+            var servicesPrvider = ConfigurationService.Injection();
+            var myService = servicesPrvider.GetService<OnDemandSubscription>();
             Console.WriteLine("Hello");
             Console.ReadKey();
         }

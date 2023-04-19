@@ -11,5 +11,9 @@ namespace RW.Position.Models
         public ulong areaid { get; set; }
         public string areaname { get; set; }
         public List<RegTagInfo> RegTagList { get; set; }
+        public override string ToString()
+        {
+            return String.Format("{0}: {1}:{2}", areaid, areaname, RegTagList);
+        }
     }
 }
