@@ -1,12 +1,14 @@
 ﻿using FreeSql.DataAnnotations;
+using MediatR;
 using System;
 
 namespace RW.Position.Models
 {
-    public class PositionInfo
+  
+    public class PositionInfo:IRequest
     {
         [Column(IsIdentity = true, IsPrimary = true)]
-        public int Id { get; set; }
+        public int id { get; set; }
         public ulong tagid { get; set; }
         public int x { get; set; }
         public int y { get; set; }

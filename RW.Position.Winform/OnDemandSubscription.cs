@@ -4,28 +4,28 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using LsWebsocketClient;
 using Mapster;
 using MapsterMapper;
-using MediatR;
+using LsWebsocketClient;
+
 using Microsoft.Extensions.Configuration;
 using RW.Position.Common;
 using RW.Position.events;
-using RW.Position.Extensions;
+using RW.Position.WinForm.Extensions;
 using RW.Position.websocketServers;
 
-namespace RW.Position
+
+namespace RW.Position.WinForm
 {
     public class OnDemandSubscription
     {
         private readonly LocalsenseInterface _client;
         private readonly IMapper _mapper;
-        private static readonly object _getPOSValue = new object();
-        private readonly IMediator _mediator;
-        Publisher _publisher ;
+
+  
+        Publisher _publisher;
         websocketServers.OnMessagePOSServers _onMessagePOSServers;
-        OnMessageBaseServers _onMessageBaseServers;
-        public  OnDemandSubscription()
+        public OnDemandSubscription()
         {
             string ip = ConfigurationService.config["websocketConnectionStrings:ip"];
             int Port = int.Parse(ConfigurationService.config["websocketConnectionStrings:Port"]);
@@ -33,27 +33,24 @@ namespace RW.Position
             string passwd = ConfigurationService.config["websocketConnectionStrings:passwd"];
             var setting = new CommonSetting(ip, Port, user, passwd);
             _client = new LocalsenseInterface(setting.IP, setting.Port, setting.UserName, setting.Password, setting.Salt);
-          
+           
             //接收位置数据事件
             _client.OnMessagePos += (sender, e) =>
             {
-                //foreach (LsPosInfo item in e.Data)
+                var addModel = _mapper.Map<List<Models.PositionInfo>>(e.Data);
+                OnHandlerPos(e.Data);
+                //foreach (Models.PositionInfo item in addModel)
                 //{
-
-                //    Console.WriteLine("标签: {0}  坐标: x: {1}  y: {2}  regid: {3}  sleep: {4} batt: {5} floor: {6} indicator:{7}",
-                //        item.tagid, item.x, item.y, item.mapid, item.sleep, item.batt, item.floor, item.dim);
-
+                //    Console.WriteLine("WGS坐标 标签: {0}  坐标: x: {1}  y: {2} z: {3} regid: {4}  sleep: {5} batt: {6}",
+                //      item.tagid, (item.x), (item.y), (item.z), item.mapid, item.sleep, item.batt);
                 //}
-            OnHandlerPos(e.Data);
-               
-                
             };
 
             //_client.OnMessageWGS_Pos += (sender, e) =>
             //    OnHandlerWGS_Pos(e.Data);
 
             //_client.OnMessageGlobal_Pos += (sender, e) =>
-            //    OnHandlerGlobal_Pos(e.Data);
+            //   OnHandlerGlobal_Pos(e.Data);
             //接收报警数据事件
             //_client.OnMessageAlarm += (sender, e) =>
             //    OnHandlerAlarm(e.Data);
@@ -63,8 +60,8 @@ namespace RW.Position
             //    OnHandlerBattery(e.Data);
 
             //接收基站数据事件
-            //_client.OnMessageBaseStatus += (sender, e) =>
-                //OnHandlerBase(e.Data);
+            _client.OnMessageBaseStatus += (sender, e) =>
+                OnHandlerBase(e.Data);
 
             //_client.OnMessageHeartRate += (sender, e) =>
             //    OnHandlerHeartRate(e.Data);
@@ -75,9 +72,9 @@ namespace RW.Position
             //_client.OnMessageVideoTrace += (sender, e) =>
             //    OnHandlerVideoTrace(e.Data);
             //
-           // 接收考勤区域进出事件
-            //_client.OnMessageRegInOut += (sender, e) =>
-            //    OnHandlerAttenceIO(e.Data);
+            // 接收考勤区域进出事件
+            _client.OnMessageRegInOut += (sender, e) =>
+                OnHandlerAttenceIO(e.Data);
             //接收区域统计信息事件
             //_client.OnMessageIOState += (sender, e) =>
             //    OnHandlerIOState(e.Data);
@@ -89,38 +86,22 @@ namespace RW.Position
             //OnHandlerErrInfo(e.Data);       
         }
 
-        public OnDemandSubscription(IMapper mapper, OnMessagePOSServers onMessagePOSServers,OnMessageBaseServers onMessageBaseServers,Publisher publisher,IMediator mediator ) : this()
+        public OnDemandSubscription(IMapper mapper, OnMessagePOSServers onMessagePOSServers, Publisher publisher) : this()
         {
-            _mapper = mapper;          
+            _mapper = mapper;
             _onMessagePOSServers = onMessagePOSServers;
-            _onMessageBaseServers = onMessageBaseServers;
             _publisher = publisher;
-            _mediator = mediator;
         }
 
-       
-
         ///接收位置数据 
-        private async void OnHandlerPos(List<LsPosInfo> vpos)
+        private  void OnHandlerPos(List<LsPosInfo> vpos)
         {
-           
-                var  addModel = _mapper.Map<List<Models.PositionInfo>>(vpos);
-            foreach (LsPosInfo item in vpos)
-            {
-
-                Console.WriteLine("标签: {0}  坐标: x: {1}  y: {2}  regid: {3}  sleep: {4} batt: {5} floor: {6} indicator:{7}",
-                    item.tagid, item.x, item.y, item.mapid, item.sleep, item.batt, item.floor, item.dim);
-
-            }
-
-            await _mediator.Send(new CreatePositionCommand(addModel));
-
+            var addModel = _mapper.Map<List<Models.PositionInfo>>(vpos);
             // 注册事件处理程序
-            //_publisher.EventOnHandlerPos += _onMessagePOSServers.getPOSValue;
+
+            _publisher.EventOnHandlerPos +=  _onMessagePOSServers.getPOSValue;
             //触发事件，然后将自定义的对象作为事件触发类型传入
-           // _publisher.IssrueEventOnHandlerPos(addModel);
-
-
+            _publisher.IssrueEventOnHandlerPos(addModel);
 
         }
         private void OnHandlerWGS_Pos(List<LsPosInfo> vpos)
@@ -190,7 +171,7 @@ namespace RW.Position
         {
             var addModel = _mapper.Map<List<Models.LsBaseStatus>>(data);
             // 注册事件处理程序
-            _publisher.EventOnHandlerBase += _onMessageBaseServers.getBaseValue;
+            _publisher.EventOnHandlerBase += new websocketServers.OnMessageBaseServers().getBaseValue;
             //触发事件，然后将自定义的对象作为事件触发类型传入
             _publisher.IssrueEventOnHandlerBase(addModel);
         }
@@ -198,7 +179,7 @@ namespace RW.Position
         // 接收心率数据
         private void OnHandlerHeartRate(LsHeartRate data)
         {
-            
+
             Console.WriteLine(DateTime.Now.ToString() + "  标签: {0}  心率: {1}  时间：{2} ", data.tagid, data.val, data.timestamp);
 
 
@@ -217,7 +198,7 @@ namespace RW.Position
         // 接收视频联动
         private void OnHandlerVideoTrace(LsTagVideoTrace data)
         {
-           Console.WriteLine(DateTime.Now.ToString() + "  标签: {0}  ip: {1}  port: {2}  success: {3}", data.tagid, data.ip, data.port, data.success);
+            Console.WriteLine(DateTime.Now.ToString() + "  标签: {0}  ip: {1}  port: {2}  success: {3}", data.tagid, data.ip, data.port, data.success);
         }
 
         // 接收考勤区域进出
@@ -235,4 +216,3 @@ namespace RW.Position
         }
     }
 }
-

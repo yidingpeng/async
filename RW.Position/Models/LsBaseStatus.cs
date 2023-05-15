@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace RW.Position.Models
 {
-    class LsBaseStatus
+   public class LsBaseStatus
     {
         [Column(IsIdentity = true, IsPrimary = true)]
         public int Id { get; set; }

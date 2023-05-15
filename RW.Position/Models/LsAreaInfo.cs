@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace RW.Position.Models
 {
-    public struct LsAreaInfo
+    public class LsAreaInfo
     {
         public ulong areaid { get; set; }
         public string areaname { get; set; }
